@@ -1,0 +1,2 @@
+id,F1,group
+1,47.8152084951781,simulationGroup1

@@ -1,0 +1,87 @@
+********************************************************************************
+*                         warfarinPKPD_project.mlxtran                         *
+*                         March 03, 2025 at 14:54:47                           *
+*                         Monolix version : 2021R2                             *
+********************************************************************************
+
+
+ESTIMATION OF THE POPULATION PARAMETERS ________________________________________
+
+Fixed Effects ----------------------------
+Tlag_pop   :                          0.92
+ka_pop     :                           1.4
+V_pop      :                          7.89
+Cl_pop     :                         0.134
+R0_pop     :                          96.5
+kout_pop   :                        0.0542
+Imax_pop   :                         0.996
+IC50_pop   :                          1.15
+
+Standard Deviation of the Random Effects -
+omega_Tlag :                         0.497
+omega_ka   :                         0.882
+omega_V    :                         0.219
+omega_Cl   :                         0.284
+omega_R0   :                        0.0532
+omega_kout :                         0.106
+omega_Imax :                         0.534
+omega_IC50 :                         0.449
+
+Error Model Parameters -------------------
+a1         :                         0.282
+b1         :                        0.0469
+a2         :                          3.82
+
+Elapsed time (seconds):       51
+Exploratory phase iterations:      248 (Autostop)
+Smoothing phase iterations:        100 (Autostop)
+
+ _______________________________________________________________________________
+
+
+
+ESTIMATION OF THE INDIVIDUAL PARAMETERS ________________________________________
+
+
+Estimation of the individual parameters by Conditional Distribution ------------
+             min        Q1    median        Q3       max
+Tlag :     0.572     0.838     0.913     0.971      2.73
+ka   :     0.312      1.28      1.51      1.75      4.53
+V    :      5.06      6.98      7.92      8.95      12.3
+Cl   :    0.0736     0.109     0.129     0.164     0.279
+R0   :      88.2      92.2      98.4      99.3       105
+kout :    0.0473    0.0517    0.0534     0.057    0.0629
+Imax :     0.995     0.996     0.996     0.996     0.996
+IC50 :     0.506      0.79      1.17      1.58      2.46
+
+Elapsed time (seconds):       15
+Iterations:      112 (Autostop)
+
+ -------------------------------------------------------------------------------
+
+
+Estimation of the individual parameters by Conditional Mode --------------------
+             min        Q1    median        Q3       max
+Tlag :     0.588     0.852      0.91     0.975      2.76
+ka   :     0.312      1.26      1.43      1.57      3.34
+V    :      5.04      6.91      7.98      8.95      12.2
+Cl   :    0.0739      0.11     0.129     0.164     0.279
+R0   :      88.5      92.5      98.6      99.5       105
+kout :    0.0468    0.0512    0.0532    0.0569    0.0627
+Imax :     0.996     0.996     0.996     0.996     0.996
+IC50 :     0.511     0.814      1.16      1.59      2.44
+
+Elapsed time (seconds):      1.8
+
+ -------------------------------------------------------------------------------
+
+ _______________________________________________________________________________
+
+
+
+DATASET INFORMATION
+Number of individuals: 32
+Number of observations (obsid 1): 247
+Number of observations (obsid 2): 232
+Number of doses: 32
+

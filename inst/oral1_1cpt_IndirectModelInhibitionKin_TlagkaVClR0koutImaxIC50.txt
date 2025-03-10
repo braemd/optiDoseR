@@ -1,0 +1,30 @@
+DESCRIPTION:
+PKPD model. The PK data must be tagged with the lowest OBSERVATION ID value. 
+The administration is extravascular with a first order absorption (rate constant ka) and a lag time (Tlag).
+The PK model has one compartment (volume V) and a linear elimination (clearance Cl).
+The PD model is an indirect turnover model with inhibition of the production (baseline response R0, degradation rate kout, 
+maximal fraction of inhibition Imax, and half-maximal inhibitory concentration IC50).
+
+[LONGITUDINAL]
+input = {Tlag, ka, V, Cl, R0, kout, Imax, IC50}
+
+PK:
+;====== PK part of the model
+
+; PK model definition 
+Cc = pkmodel(Tlag, ka, V, Cl)
+
+EQUATION:
+;====== PD part of the model
+
+; Initial values
+R_0 = R0
+                               
+; Parameter transformation
+kin = R0 * kout
+                               
+; ODE for the response
+ddt_R = kin * (1 - Imax * Cc/(Cc+IC50)) - kout * R 
+
+OUTPUT: 
+output = {Cc, R}

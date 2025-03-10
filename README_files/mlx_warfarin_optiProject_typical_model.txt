@@ -1,0 +1,71 @@
+DESCRIPTION:
+PKPD model. The PK data must be tagged with the lowest OBSERVATION ID value. 
+The administration is extravascular with a first order absorption (rate constant ka) and a lag time (Tlag).
+The PK model has one compartment (volume V) and a linear elimination (clearance Cl).
+The PD model is an indirect turnover model with inhibition of the production (baseline response R0, degradation rate kout, 
+maximal fraction of inhibition Imax, and half-maximal inhibitory concentration IC50).
+
+[LONGITUDINAL]
+input = {F1,Tlag_cov, ka_cov, V_cov, Cl_cov, R0_cov, kout_cov, Imax_cov, IC50_cov,DOSE_NR}
+DOSE_NR = {use=regressor}
+Tlag_cov = {use=regressor}
+ ka_cov = {use=regressor}
+ V_cov = {use=regressor}
+ Cl_cov = {use=regressor}
+ R0_cov = {use=regressor}
+ kout_cov = {use=regressor}
+ Imax_cov = {use=regressor}
+ IC50_cov = {use=regressor}
+
+PK:
+if DOSE_NR==1
+   F = F1
+end
+
+Tlag = Tlag_cov
+ ka =  ka_cov
+ V =  V_cov
+ Cl =  Cl_cov
+ R0 =  R0_cov
+ kout =  kout_cov
+ Imax =  Imax_cov
+ IC50 =  IC50_cov
+;====== PK part of the model
+
+; PK model definition 
+Cc = pkmodel(Tlag, ka, V, Cl,p=F)
+
+EQUATION:
+;====== PD part of the model
+
+; Initial values
+R_0 = R0
+                               
+; Parameter transformation
+kin = R0 * kout
+                               
+; ODE for the response
+ddt_R = kin * (1 - Imax * Cc/(Cc+IC50)) - kout * R 
+
+AUC0_0 = 0
+AUC1_0 = 0
+
+dpen0 = 0
+if (t>0 & t<200)
+   dpen0 = max(0,30 - R)
+end
+ddt_AUC0 = dpen0
+dpen1 = 0
+if (t>0 & t<200)
+   dpen1 = Cc
+end
+ddt_AUC1 = dpen1
+
+pen0 = 100 * AUC0
+pen1 = 1 * exp(-0.01 * AUC1)
+
+pen = pen0 + pen1
+
+OUTPUT: 
+output = pen
+table = {Cc, R}

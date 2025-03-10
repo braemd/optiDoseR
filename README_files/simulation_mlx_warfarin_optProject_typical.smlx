@@ -1,0 +1,89 @@
+<DATAFILE>
+
+[FILEINFO]
+file='mlx_warfarin_optiProject_typical_data.csv'
+delimiter = comma
+header = {ID, TIME, DV, AMT, EVID, DOSE_NR, Tlag_cov, ka_cov, V_cov, Cl_cov, R0_cov, kout_cov, Imax_cov, IC50_cov}
+
+[CONTENT]
+ID = {use=identifier}
+TIME = {use=time}
+DV = {use=observation, name=DV, type=continuous}
+AMT = {use=amount}
+EVID = {use=eventidentifier}
+DOSE_NR = {use=regressor}
+Tlag_cov = {use=regressor}
+ka_cov = {use=regressor}
+V_cov = {use=regressor}
+Cl_cov = {use=regressor}
+R0_cov = {use=regressor}
+kout_cov = {use=regressor}
+Imax_cov = {use=regressor}
+IC50_cov = {use=regressor}
+
+[FILTER]
+data_DV = {origin='mlx_warfarin_optiProject_typical_data.csv'}
+
+<MODEL>
+
+[INDIVIDUAL]
+input = F1_pop
+
+DEFINITION:
+F1 = {distribution=logNormal, typical=F1_pop, no-variability}
+
+[LONGITUDINAL]
+input = {a}
+
+file = 'simulation_mlx_warfarin_optProject_typical/ModelFile/mlx_warfarin_optiProject_typical_model.txt'
+
+DEFINITION:
+DV = {distribution=normal, prediction=pen, errorModel=constant(a)}
+
+<SIMULX>
+
+[SETTINGS]
+GLOBAL:
+exportpath='simulation_mlx_warfarin_optProject_typical'
+
+[DEFINITION]
+OCCASION:
+file='simulation_mlx_warfarin_optProject_typical/ExternalFiles/mlx_subjects.txt'
+
+POPULATION:
+parameters={F1_pop, a}
+'mlx_Pop' = {{{values={47.81520849517815, 0.0001}}}}
+
+OUTPUT:
+'mlx_DV' = {output=DV, file='simulation_mlx_warfarin_optProject_typical/ExternalFiles/mlx_DV.txt'}
+'mlx_pen' = {output=pen, {{start=200, interval=0.000001, final=200}}}
+'mlx_Cc' = {output=Cc, {{start=200, interval=0.000001, final=200}}}
+'mlx_R' = {output=R, {{start=200, interval=0.000001, final=200}}}
+'Concentration' = {output=Cc, {{start=0, interval=1, final=100}}}
+'PCA' = {output=R, {{start=0, interval=1, final=100}}}
+
+INDIVIDUAL:
+parameters={F1}
+'mlx_PopIndiv' = {{{values={47.81520849517815}}}}
+'mlx_EBEs' = {file='simulation_mlx_warfarin_optProject_typical/ExternalFiles/mlx_EBEs.txt'}
+
+TREATMENT:
+'mlx_Adm1' = {file='simulation_mlx_warfarin_optProject_typical/ExternalFiles/mlx_Adm1.txt', adm=1}
+
+REGRESSOR:
+regressors={DOSE_NR, Tlag_cov, ka_cov, V_cov, Cl_cov, R0_cov, kout_cov, Imax_cov, IC50_cov}
+'mlx_Reg' = {file='simulation_mlx_warfarin_optProject_typical/ExternalFiles/mlx_Reg.txt'}
+
+[SIMULATION]
+GROUPS:
+'simulationGroup1'={size=1, parameter='mlx_EBEs', remaining={a=1}, outputs={'Concentration', 'PCA'}, treatment={'mlx_Adm1'}, regressor='mlx_Reg'}
+sharedIds={treatment, regressor}
+
+[EXPLORATION]
+GROUPS:
+'explorationGroup1'={remaining={a=1}, parameter='mlx_PopIndiv', outputs={'mlx_pen', 'mlx_Cc', 'mlx_R'}, treatment={'mlx_Adm1'}, regressor='mlx_Reg'}
+
+[TASKS]
+simulation()
+endpoint(run=false)
+

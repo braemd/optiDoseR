@@ -1,0 +1,60 @@
+<DATAFILE>
+
+[FILEINFO]
+file='mlx_warfarin_optiProject_typical_data.csv'
+delimiter = comma
+header = {ID, TIME, DV, AMT, EVID, DOSE_NR, Tlag_cov, ka_cov, V_cov, Cl_cov, R0_cov, kout_cov, Imax_cov, IC50_cov}
+
+[CONTENT]
+ID = {use=identifier}
+TIME = {use=time}
+DV = {use=observation, name=DV, type=continuous}
+AMT = {use=amount}
+EVID = {use=eventidentifier}
+DOSE_NR = {use=regressor}
+Tlag_cov = {use=regressor}
+ka_cov = {use=regressor}
+V_cov = {use=regressor}
+Cl_cov = {use=regressor}
+R0_cov = {use=regressor}
+kout_cov = {use=regressor}
+Imax_cov = {use=regressor}
+IC50_cov = {use=regressor}
+
+<MODEL>
+
+[INDIVIDUAL]
+input = F1_pop
+
+DEFINITION:
+F1 = {distribution=logNormal, typical=F1_pop, no-variability}
+
+[LONGITUDINAL]
+input = {a}
+
+file = 'mlx_warfarin_optiProject_typical_model.txt'
+
+DEFINITION:
+DV = {distribution=normal, prediction=pen, errorModel=constant(a)}
+
+<FIT>
+data = DV
+model = DV
+
+<PARAMETER>
+F1_pop = {value=100, method=MLE}
+a = {value=0.0001, method=FIXED}
+
+<MONOLIX>
+
+[TASKS]
+populationParameters()
+individualParameters(method = {conditionalMean, conditionalMode })
+fim(run = false,method = StochasticApproximation)
+logLikelihood(run = false,method = ImportanceSampling)
+plotResult(method = {indfits, obspred, vpc, parameterdistribution, covariatemodeldiagnosis, randomeffects, covariancemodeldiagnosis, residualsscatter, residualsdistribution, saemresults })
+
+[SETTINGS]
+GLOBAL:
+exportpath = 'mlx_warfarin_optiProject_typical_mlx'
+
