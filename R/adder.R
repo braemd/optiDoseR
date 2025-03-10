@@ -5,8 +5,7 @@
 #' 
 #' NULL
 #' 
-#' @param software Software for which the optiProject should be initialized (currently
-#' "Monolix" and "NONMEM" available)
+#' @param software Software for which the optiProject should be initialized ("Monolix", "NONMEM", and "nlmixr2" available)
 #' @author Dominic Bräm
 #' @returns A optiProject-object, to which additional elements of the optiDose approach
 #' can be added.

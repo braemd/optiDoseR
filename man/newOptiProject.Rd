@@ -7,8 +7,7 @@
 newOptiProject(software)
 }
 \arguments{
-\item{software}{Software for which the optiProject should be initialized (currently
-"Monolix" and "NONMEM" available)}
+\item{software}{Software for which the optiProject should be initialized ("Monolix", "NONMEM", and "nlmixr2" available)}
 }
 \value{
 A optiProject-object, to which additional elements of the optiDose approach
