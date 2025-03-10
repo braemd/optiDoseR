@@ -1,4 +1,4 @@
-Package: optiDose
+Package: optiDoseR
 Type: Package
 Title: Simplifies application of optiDose in Monolix and NONMEM
 Version: 0.1.0
