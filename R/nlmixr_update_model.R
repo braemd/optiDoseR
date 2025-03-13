@@ -130,13 +130,18 @@ nlmixrUpdateModelBioav <- function(optiProject){
   } else{
     bioav_lines <- lapply(1:dose_levels,function(x){
       out <- list(paste0("        if(DOSE_NR == ",x,"){"),
-                  paste0("           F0 = F",x),
+                  paste0("           F0_",adms[x]," = F",x),
                   paste0("        }"))
       return(out)
     }) %>% unlist()
   }
   
-  bioav_lines <- c(bioav_lines,paste0("f(",comps[1],") = F0"))
+  if(is.null(adms)){
+    bioav_lines <- c(bioav_lines,paste0("f(",comps[1],") = F0"))
+  } else{
+    boav_lines <- c(bioav_lines,paste0("f(",comps[adms],") = F0_",adms))
+  }
+  
   
   out_model <- append(out_model,c("",bioav_lines),after=model_end-1)
   optiProject$Model <- out_model
