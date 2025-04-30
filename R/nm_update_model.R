@@ -447,10 +447,10 @@ nmUpdateTable <- function(optiProject,name,iiv=FALSE){
   out_model <- out_model[-table_line_nr]
   
   if(!iiv){
-    new_table_line <- paste0("$TABLE TIME PEN NOAPPEND ",name,".tab")
+    new_table_line <- paste0("$TABLE TIME PEN NOAPPEND FILE=",name,".tab")
     out_model <- append(out_model,new_table_line,after=min(table_line_nr)-1)
   } else{
-    new_table_line <- paste0("$TABLE TIME PEN NOAPPEND ",name,".tab")
+    new_table_line <- paste0("$TABLE TIME PEN NOAPPEND FILE=",name,".tab")
     out_model <- append(out_model,new_table_line,after=min(table_line_nr)-1)
   }
   
