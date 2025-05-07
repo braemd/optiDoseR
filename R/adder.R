@@ -322,6 +322,22 @@ addIndParms <- function(optiProject,
       parm_names <- regexpr("THETA\\(\\d+\\)|ETA\\(\\d+\\)",optiProject$Model) %>%
         {regmatches(optiProject$Model,.)} %>%
         {gsub("\\(|\\)","",.)}
+    } else if(software == "nlmixr2"){
+      err_lines <- optiProject$Model %>%
+        `[`(-c(grep("ini",.):grep("model",.))) %>%
+        `[`(grepl("~",.)) %>%
+        {gsub(" ","",.)}
+      err_parms <- err_lines %>%
+        {gregexpr("\\([^\\)]*\\)",.)} %>%
+        {regmatches(err_lines,.)} %>%
+        unlist() %>%
+        {gsub("\\(|\\)","",.)}
+      parm_names <- optiProject$Model %>%
+        `[`(grep("ini",.):grep("model",.)) %>%
+        {gsub(" *","",.)} %>%
+        `[`(grepl("\\w<-|\\w~",.)) %>%
+        {gsub("([^<^~]+)[<~](.*)","\\1",.)} %>%
+        `[`(!. %in% err_parms)
     }
     if(!(all(c("id",parm_names) %in% df_cols) & all(df_cols %in% c("id",parm_names)))){
       stop("If a dataframe is provided, only columns for id and parameters are allowed and required")
