@@ -140,7 +140,7 @@ addTargetValueAUC <- function(optiProject,
 #' warf_proj <- newOptiProject("Monolix") %>%
 #'                   addPmxRun("../inst/warfarinPKPD_project.mlxtran",
 #'                             lixoft_path = "C:/ProgramData/Lixoft/MonolixSuite2021R2") %>%
-#'                   addTargetFunAUC("R",target_fun = "100 \* exp(-0.2 \* t)", pen_time = c(0,30),
+#'                   addTargetFunAUC("R",target_fun = "100 * exp(-0.2 * t)", pen_time = c(0,30),
 #'                                     eval_time = 50)
 #' }
 #' @import checkmate
@@ -160,7 +160,7 @@ addTargetFunAUC <- function(optiProject,
   out <- optiProject
   
   if(software == "Monolix"){
-    out$Constraints[[n_constraint+1]] <- mlxTargetFunAUC(state,target_value,pen_time,eval_time,
+    out$Constraints[[n_constraint+1]] <- mlxTargetFunAUC(state,target_fun,pen_time,eval_time,
                                                          n_constraint,gamma)
   } else if(software == "NONMEM"){
     model_text <- optiProject$Model
@@ -168,10 +168,10 @@ addTargetFunAUC <- function(optiProject,
       stop("To add AUC constraint to NONMEM, first a model code must be added to the optiProject")
     }
     n_state <- nm_nstate_extractor(model_text) + sum(unlist(lapply(optiProject$Constraints,function(x) grepl("AUC",x$Type)))) + 1
-    out$Constraints[[n_constraint+1]] <- nmTargetFunAUC(state,target_value,pen_time,eval_time,
+    out$Constraints[[n_constraint+1]] <- nmTargetFunAUC(state,target_fun,pen_time,eval_time,
                                                         n_state,n_constraint,gamma)
   } else if(software == "nlmixr2"){
-    out$Constraints[[n_constraint+1]] <- nlmixrTargetFunAUC(state,target_value,pen_time,eval_time,
+    out$Constraints[[n_constraint+1]] <- nlmixrTargetFunAUC(state,target_fun,pen_time,eval_time,
                                                          n_constraint,gamma)
   }
   
