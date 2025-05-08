@@ -213,3 +213,25 @@ nlmixrUpdateModelOut <- function(optiProject){
   return(optiProject)
   
 }
+
+#' Update model if population without IIV
+#' 
+#' If a single dose level is estimated with a population but without IIV, the estimation
+#' algorithm "bobyqa" seems to struggle. Therfore, a dummy parameter "tmp" is introduced.
+#' 
+#' Should be called only if pop=TRUE and IIV=FALSE, after \code{nlmixrUpdateModelOut}
+#' 
+#' @param optiProject A optiProject-object with a model added.
+#' @author Dominic Bräm
+nlmixrUpdatePopNoIIV <- function(optiProject){
+  out_model <- optiProject$Model
+  
+  ini_start <- grep("ini\\(\\{",out_model)
+  out_model <- append(out_model,"        tmp <- c(0,1,2)", after = ini_start)
+  
+  model_start <- grep("model\\(\\{",out_model)
+  out_model <- append(out_model,"        tmptmp <- exp(tmp)", after = model_start)
+  
+  optiProject$Model <- out_model
+  return(optiProject)
+}

@@ -46,6 +46,11 @@ nlmixrSetAll <- function(optiProject,
     nlmixrUpdateModelPens() %>%
     nlmixrUpdateModelOut()
   
+  if(pop & !iiv){
+    optiProject <- optiProject %>%
+      nlmixrUpdatePopNoIIV()
+  }
+  
   model_name <- paste0(name,"_model")
   model_fun <- paste(optiProject$Model,collapse="\n") %>%
     {eval(str2lang(.))}
@@ -53,7 +58,7 @@ nlmixrSetAll <- function(optiProject,
   print(paste0("Model has been saved in the global environment under: ",model_name))
   
   if(run_model){
-    if(!pop){
+    if(!iiv){
       fit <- nlmixr2::nlmixr2(object = get(model_name,pos=".GlobalEnv"),
                               data = get(data_name,pos=".GlobalEnv"),
                               est = "bobyqa",
