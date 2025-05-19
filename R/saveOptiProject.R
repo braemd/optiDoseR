@@ -118,19 +118,21 @@ saveOptiProject <- function(optiProject,
   }
   
   software <- optiProject$Software
-  if(software == "Monolix" & create_mlx){
+  if(software == "Monolix"){
     if(separate){
       warning("Option separate not available for Monolix, will be ignored")
     }
     
-    if(!("lixoftConnectors" %in% row.names(installed.packages()))){
-      stop("lixoftConnectors is needed for pmxOptiD in Monolix, please install this package first")
-    }
-    if(!("lixoftConnectors" %in% .packages())){
-      stop("Please first load lixoftConnectors and initialize your MonolixSuite")
-    }
-    if(is.null(suppressMessages(lixoftConnectors::isProjectLoaded()))){
-      stop("Please initialize lixoftConnectors first")
+    if(create_mlx){
+      if(!("lixoftConnectors" %in% row.names(installed.packages()))){
+        stop("lixoftConnectors is needed for optiDoseR in Monolix, please install this package first")
+      }
+      if(!("lixoftConnectors" %in% .packages())){
+        stop("Please first load lixoftConnectors and initialize your MonolixSuite")
+      }
+      if(is.null(suppressMessages(lixoftConnectors::isProjectLoaded()))){
+        stop("Please initialize lixoftConnectors first")
+      }
     }
     
     mlxSetAll(optiProject,

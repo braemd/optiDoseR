@@ -96,7 +96,7 @@ addPmxRun <- function(optiProject,
 #' 
 #' @param pmx_file A Monolix \emph{.mlxtran} file.
 #' @param lixoft_path If initialized with "Monolix" and the structural model used in the \emph{.mlxtran} file is
-#' a model from the library, \code{lixoft_path} is needed. Standard is "C:/ProgramData/Lixoft/MonolixSuiteXXXX".
+#' a model from the library, \code{lixoft_path} is needed. Standard is "C:/ProgramData/Lixoft/MonolixSuiteXXXX" or "C:/Program Files/Lixoft/MonolixSuiteXXXX" (dependent on version).
 #' @author Dominic Bräm
 #' @importFrom magrittr %>%
 #' @importFrom tools file_path_as_absolute
@@ -113,26 +113,47 @@ newOptiMlx <- function(pmx_file,lixoft_path){
     if(is.null(lixoft_path)){
       stop("Library model was used. Please provide path to Lixoft installation")
     }
-    
-    all_lib_path <- lixoft_path %>%
-      paste0("/factory/library")
-    for(i in dir(all_lib_path)){
-      if(gsub("lib:","",model_file) %in% dir(paste0(all_lib_path,"/",i))){
-        lib_folder <- i
+    mlx_version <- gsub(".*MonolixSuite([0-9]{4}).*","\\1",lixoft_path) %>%
+      as.numeric()
+    if(mlx_version<2023){
+      all_lib_path <- lixoft_path %>%
+        paste0("/factory/library")
+      for(i in dir(all_lib_path)){
+        if(gsub("lib:","",model_file) %in% dir(paste0(all_lib_path,"/",i))){
+          lib_folder <- i
+        }
+      }
+      if(!exists("lib_folder")){
+        stop("Model file could not be found in library")
+      } else{
+        model_file <- model_file %>%
+          {gsub("lib:",paste0(all_lib_path,"/",lib_folder,"/"),.)}
+        model_text <- readLines(model_file)
+      }
+    } else{
+      if(!("lixoftConnectors") %in% installed.packages()){
+        stop("For newer versions of MonolixSuite, the lixoftConnectors package is required. Please install lixoftConnectors first.")
+      }
+      library(lixoftConnectors)
+      if(!("getLibraryModelContent") %in% ls("package:lixoftConnectors")){
+        stop("Too old lixoftConnectors version for MonolixSuite version. Please install latest lixoftConnectors version.")
+      } else{
+        lixoftConnectors::initializeLixoftConnectors("monolix",lixoft_path)
+        model_text <- lixoftConnectors:::.processRequest("monolix", "requestlibrarymodelcontent", 
+                                                         list(filename = model_file), "asynchronous") %>%
+          strsplit("\n") %>%
+          `[[`(1)
       }
     }
-    if(!exists("lib_folder")){
-      stop("Model file could not be found in library")
-    } else{
-      model_file <- model_file %>%
-        {gsub("lib:",paste0(all_lib_path,"/",lib_folder,"/"),.)}
-    }
   } else{
-    pmx_file_abs <- tools::file_path_as_absolute(dirname(pmx_file))
-    model_file <- paste0(pmx_file_abs,"/",model_file)
+    if(tools::file_path_as_absolute(model_file) == model_file){
+      model_file <- model_file
+    } else{
+      pmx_file_abs <- tools::file_path_as_absolute(dirname(pmx_file))
+      model_file <- paste0(pmx_file_abs,"/",model_file)
+    }
+    model_text <- readLines(model_file)
   }
-  
-  model_text <- readLines(model_file)
   
   out <- list("model_file" = model_file,
               "model_text" = model_text)
