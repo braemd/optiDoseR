@@ -125,7 +125,7 @@ saveOptiProject <- function(optiProject,
     
     if(create_mlx){
       if(!("lixoftConnectors" %in% row.names(installed.packages()))){
-        stop("lixoftConnectors is needed for pmxOptiD in Monolix, please install this package first")
+        stop("lixoftConnectors is needed for optiDoseR in Monolix, please install this package first")
       }
       if(!("lixoftConnectors" %in% .packages())){
         stop("Please first load lixoftConnectors and initialize your MonolixSuite")
