@@ -141,7 +141,7 @@ newOptiMlx <- function(pmx_file,lixoft_path){
         lixoftConnectors::initializeLixoftConnectors("monolix",lixoft_path)
         model_text <- lixoftConnectors:::.processRequest("monolix", "requestlibrarymodelcontent", 
                                                          list(filename = model_file), "asynchronous") %>%
-          strsplit("\n")
+          strsplit("\n")[[1]]
       }
     }
   } else{
