@@ -96,7 +96,7 @@ addPmxRun <- function(optiProject,
 #' 
 #' @param pmx_file A Monolix \emph{.mlxtran} file.
 #' @param lixoft_path If initialized with "Monolix" and the structural model used in the \emph{.mlxtran} file is
-#' a model from the library, \code{lixoft_path} is needed. Standard is "C:/ProgramData/Lixoft/MonolixSuiteXXXX".
+#' a model from the library, \code{lixoft_path} is needed. Standard is "C:/ProgramData/Lixoft/MonolixSuiteXXXX" or "C:/Program Files/Lixoft/MonolixSuiteXXXX" (dependent on version).
 #' @author Dominic Bräm
 #' @importFrom magrittr %>%
 #' @importFrom tools file_path_as_absolute
@@ -140,7 +140,7 @@ newOptiMlx <- function(pmx_file,lixoft_path){
       } else{
         lixoftConnectors::initializeLixoftConnectors("monolix",lixoft_path)
         model_text <- lixoftConnectors:::.processRequest("monolix", "requestlibrarymodelcontent", 
-                                                         list(filename = filename), "asynchronous") %>%
+                                                         list(filename = pmx_file), "asynchronous") %>%
           strsplit("\n")
       }
     }
