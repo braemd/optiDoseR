@@ -73,8 +73,17 @@ addPmxRun <- function(optiProject,
     if(is.null(res_file) | is.null(phi_file)){
       stop("Please provide a results file for NONMEM")
     }
-    model_info <- list(model_text=readLines(pmx_file))
-    ext_parms <- parm_extractor(pmx_file=res_file,software=software,phi_file=phi_file)
+    suppressWarnings({
+      model_info <- list(model_text=readLines(pmx_file))
+      advan_1314 <- (model_info$model_text %>%
+        `[`(grepl("ADVAN",.)) %>%
+        {gsub(".*ADVAN(\\d+).*","\\1",.)} %>%
+        as.numeric()) %in% c(13,14)
+      if(!advan_1314){
+        stop("Subroutine must be ADVAN13 or ADVAN14 for optiDoseR")
+      }
+      ext_parms <- parm_extractor(pmx_file=res_file,software=software,phi_file=phi_file)
+    })
   } else if(software == "nlmixr2"){
     model_info <- newOptiNlmixr(pmx_file)
     ext_parms <- parm_extractor(pmx_file,software)
