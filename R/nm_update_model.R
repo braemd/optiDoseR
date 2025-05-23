@@ -98,9 +98,9 @@ nmUpdateSubrout <- function(optiProject){
   subrout_line_nr <- grep("\\$SUBROUTINES",out_model)
   
   if(grepl("TRANS1",out_model[subrout_line_nr])){
-    out_model[subrout_line_nr] <- "$SUBROUTINES ADVAN13 TRANS1 TOL=15 ATOL=15"
+    out_model[subrout_line_nr] <- "$SUBROUTINES ADVAN13 TRANS1 TOL=12 ATOL=10"
   } else{
-    out_model[subrout_line_nr] <- "$SUBROUTINES ADVAN13 TOL=15 ATOL=15"
+    out_model[subrout_line_nr] <- "$SUBROUTINES ADVAN13 TOL=12 ATOL=10"
   }
   
   optiProject$Model <- out_model
@@ -431,7 +431,7 @@ nmUpdateEst <- function(optiProject,iiv=FALSE){
   out_model <- out_model[-est_line_nr]
   
   if(!iiv){
-    new_est_line <- "$EST -2LL PRINT=50 MAXEVAL=99999 NSIG=8"
+    new_est_line <- "$EST -2LL PRINT=50 MAXEVAL=99999 NSIG=6"
     out_model <- append(out_model,new_est_line,after=min(est_line_nr)-1)
   } else{
     new_est_line <- "$EST METHOD=SAEM AUTO=1 NITER=500 PRINT=20"
